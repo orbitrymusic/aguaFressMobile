@@ -2,7 +2,7 @@
 
 ## 📝 Descripción
 
-**aguaFress** es una solución móvil diseñada para la gestión eficiente de repartos de agua, soda y bebidas. La aplicación permite a los distribuidores mayoristas administrar su cartera de clientes, visualizar el catálogo de productos y registrar nuevos pedidos o clientes de forma ágil durante el recorrido.
+**aguaFress** es una solución móvil diseñada para la gestión eficiente de repartos de agua, soda y bebidas. La aplicación permite a los distribuidores mayoristas administrar su conjunto de clientes, visualizar el catálogo de productos y registrar nuevos pedidos o clientes de forma ágil durante el recorrido.
 
 - **Propósito:** Optimizar la organización del reparto mayorista y el control de la cartera de clientes en tiempo real.
 - **Usuario objetivo:** Repartidores y preventistas de la distribuidora aguaFress.
