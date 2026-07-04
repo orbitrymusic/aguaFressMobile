@@ -13,6 +13,8 @@ export default function RootLayout() {
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="login" options={{ headerShown: false }} />
       <Stack.Screen name="catalog" options={{ title: 'Catálogo de Productos' }} />
+      <Stack.Screen name="dashboard/index" options={{ title: 'Mi Cartera', headerShown: false }} />
+      <Stack.Screen name="dashboard/[clientId]" options={{ title: 'Pedidos del Cliente' }} />
     </Stack>
   );
 }

@@ -37,16 +37,34 @@ Se ha seguido la arquitectura sugerida en la Etapa 3 de la consigna para garanti
 
 ```text
 AguaFress-Mobile/
-├── android/
+├── scripts/
 ├── assets/
+│   └── images/
 └── src/
     ├── app/          # Configuración global, navegación principal o rutas (Expo Router)
+    │   ├── index.tsx           (sin cambios)
+    │   ├── _layout.tsx         (sin cambios)
+    │   ├── login.tsx           (sin cambios)
+    │   ├── catalog.tsx         (sin cambios — vista minorista)
+    │   └── dashboard/
+    │       ├── index.tsx       ← lista de clientes del mayorista
+    │       └── [clientId].tsx  ← detalle de pedidos de un cliente
+    │
     ├── components/   # Componentes visuales reutilizables (Botones, Tarjetas)
-    ├── constants/    # Valores fijos (Colores, Dimensiones, URLs de APIs)
-    ├── hooks/        # Funciones personalizadas de React (useAuth, useFetch)
-    ├── services/     # Llamados a APIs externas y lógica de datos (Axios, Fetch)
-    ├── types/        # Definiciones de TypeScript (Interfaces, Tipos)
-    └── App.tsx       # Punto de entrada de la aplicación (si no usas Expo Router)
+    │   ├── Button.tsx         (sin cambios)
+    │   ├── ProductCard.tsx    (sin cambios)
+    │   └── ClientCard.tsx      ← nuevo, tarjeta del cliente minorista
+    │
+    ├── services/
+    │   ├── auth.service.ts     (modificar — agregar rol mayorista)
+    │   ├── products.service.ts (sin cambios)
+    │   └── orders.service.ts   ← nuevo, pedidos mock
+    ├── types/
+    │   └── index.ts            (modificar — agregar Vendor, Order)
+    ├── hooks/
+    │   └── useLoginForm.ts
+    └── constants/
+        └── theme.ts            (sin cambios)
 
 ```
 

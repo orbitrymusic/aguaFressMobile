@@ -1,54 +1,100 @@
-import { User } from "../types";
+import { Client, Vendor } from '../types';
 
-// ─── Mock de usuarios ─────────────────────────────────────────────────────────
-// Reemplazar por llamada a API/Supabase cuando salgas del MVP
+// ─── Mock de clientes minoristas ──────────────────────────────────────────────
 
-const MOCK_USERS: User[] = [
+const MOCK_CLIENTS: Client[] = [
   {
-    id: "1",
-    email: "carlos@gmail.com",
-    password: "1234",
-    name: "Carlos Méndez",
-    businessName: "Mercado El Sol",
+    id: 'client-001',
+    email: 'carlos@gmail.com',
+    password: '1234',
+    name: 'Carlos Méndez',
+    role: 'client',
+    businessName: 'Mercado El Sol',
+    vendorId: 'vendor-001',
   },
   {
-    id: "2",
-    email: "ana@gmail.com",
-    password: "1234",
-    name: "Ana Romero",
-    businessName: "Kiosco La Luna",
+    id: 'client-002',
+    email: 'ana@gmail.com',
+    password: '1234',
+    name: 'Ana Romero',
+    role: 'client',
+    businessName: 'Kiosco La Luna',
+    vendorId: 'vendor-001',
   },
   {
-    id: "3",
-    email: "roberto@gmail.com",
-    password: "1234",
-    name: "Roberto Silva",
-    businessName: "Almacén Don Roberto",
+    id: 'client-003',
+    email: 'roberto@gmail.com',
+    password: '1234',
+    name: 'Roberto Silva',
+    role: 'client',
+    businessName: 'Almacén Don Roberto',
+    vendorId: 'vendor-002',
+  },
+];
+
+// ─── Mock de vendedores mayoristas ────────────────────────────────────────────
+
+const MOCK_VENDORS: Vendor[] = [
+  {
+    id: 'vendor-001',
+    email: 'juan@aguafress.com',
+    password: '1234',
+    name: 'Juan Pérez',
+    role: 'vendor',
+    zone: 'Centro',
+  },
+  {
+    id: 'vendor-002',
+    email: 'maria@aguafress.com',
+    password: '1234',
+    name: 'María García',
+    role: 'vendor',
+    zone: 'Norte',
   },
 ];
 
 // ─── Funciones ────────────────────────────────────────────────────────────────
 
 /**
- * Busca un usuario por email y password.
- * Simula 800ms de latencia para disparar el estado de loading.
- * Lanza un Error con mensaje legible si las credenciales no coinciden.
+ * Busca el usuario en clientes y vendedores por email y password.
+ * Simula 800ms de latencia de red.
+ * Lanza un Error si las credenciales no coinciden.
  */
-export async function login(email: string, password: string): Promise<User> {
+export async function login(
+  email: string,
+  password: string
+): Promise<Client | Vendor> {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      const user = MOCK_USERS.find(
-        (u) =>
-          u.email.toLowerCase() === email.trim().toLowerCase() &&
-          u.password === password,
-      );
+      const normalizedEmail = email.trim().toLowerCase();
+
+      // Busca primero en clientes, luego en vendedores
+      const user =
+        MOCK_CLIENTS.find(
+          (u) => u.email.toLowerCase() === normalizedEmail && u.password === password
+        ) ||
+        MOCK_VENDORS.find(
+          (u) => u.email.toLowerCase() === normalizedEmail && u.password === password
+        );
 
       if (!user) {
-        reject(new Error("Email o contraseña incorrectos."));
+        reject(new Error('Email o contraseña incorrectos.'));
         return;
       }
 
       resolve(user);
     }, 800);
+  });
+}
+
+/**
+ * Devuelve los clientes minoristas asignados a un vendedor.
+ * Útil para el dashboard del mayorista.
+ */
+export async function getClientsByVendor(vendorId: string): Promise<Client[]> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(MOCK_CLIENTS.filter((c) => c.vendorId === vendorId));
+    }, 600);
   });
 }
