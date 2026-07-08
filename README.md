@@ -54,12 +54,12 @@ AguaFress-Mobile/
     ├── components/   # Componentes visuales reutilizables (Botones, Tarjetas)
     │   ├── Button.tsx
     │   ├── ProductCard.tsx
-    │   └── ClientCard.tsx      ← nuevo, tarjeta del cliente minorista
+    │   └── ClientCard.tsx
     │
     ├── services/
     │   ├── auth.service.ts     (modificar — agregar rol mayorista)
     │   ├── products.service.ts
-    │   └── orders.service.ts   ← nuevo, pedidos mock
+    │   └── orders.service.ts
     ├── types/
     │   └── index.ts            (modificar — agregar Vendor, Order)
     ├── hooks/
