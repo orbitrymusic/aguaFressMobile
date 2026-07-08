@@ -1,18 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import {
-  View,
-  Text,
-  FlatList,
   ActivityIndicator,
-  StyleSheet,
   Alert,
-} from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { colors, spacing, typography } from '../constants/theme';
-import { getProducts } from '../services/products.service';
-import { ProductCard } from '../components/ProductCard';
-import { Button } from '../components/Button';
-import { Product } from '../types';
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { Button } from "../components/Button";
+import { ProductCard } from "../components/ProductCard";
+import { borderRadius, colors, spacing, typography } from "../constants/theme";
+import { getProducts } from "../services/products.service";
+import { Product } from "../types";
 
 export default function CatalogScreen() {
   const router = useRouter();
@@ -34,7 +35,7 @@ export default function CatalogScreen() {
         const data = await getProducts();
         setProducts(data);
       } catch (err) {
-        setError('No se pudo cargar el catálogo. Intentá de nuevo.');
+        setError("No se pudo cargar el catálogo. Intentá de nuevo.");
       } finally {
         setIsLoading(false);
       }
@@ -44,16 +45,16 @@ export default function CatalogScreen() {
 
   function handleAddToCart(product: Product) {
     setCartCount((prev) => prev + 1);
-    Alert.alert('Agregado', `${product.title} fue agregado al pedido.`);
+    Alert.alert("Agregado", `${product.title} fue agregado al pedido.`);
   }
 
   function handleLogout() {
-    Alert.alert('Cerrar sesión', '¿Querés salir de tu cuenta?', [
-      { text: 'Cancelar', style: 'cancel' },
+    Alert.alert("Cerrar sesión", "¿Querés salir de tu cuenta?", [
+      { text: "Cancelar", style: "cancel" },
       {
-        text: 'Salir',
-        style: 'destructive',
-        onPress: () => router.replace('/login'),
+        text: "Salir",
+        style: "destructive",
+        onPress: () => router.replace("/login"),
       },
     ]);
   }
@@ -74,7 +75,10 @@ export default function CatalogScreen() {
       <View style={styles.centered}>
         <Text style={styles.errorText}>{error}</Text>
         <View style={styles.retryButton}>
-          <Button label="Reintentar" onPress={() => router.replace('/catalog')} />
+          <Button
+            label="Reintentar"
+            onPress={() => router.replace("/catalog")}
+          />
         </View>
       </View>
     );
@@ -84,7 +88,6 @@ export default function CatalogScreen() {
 
   return (
     <View style={styles.container}>
-
       {/* Barra superior */}
       <View style={styles.topBar}>
         <View>
@@ -93,11 +96,16 @@ export default function CatalogScreen() {
         </View>
         <View style={styles.topBarRight}>
           <Text style={styles.cartBadge}>🛒 {cartCount}</Text>
-          <Button
+          {
+            /* <Button
             label="Salir"
             onPress={handleLogout}
             variant="outline"
-          />
+          /> */
+            <Pressable onPress={handleLogout} style={styles.logoutButton}>
+              <Text style={styles.logoutText}>Salir</Text>
+            </Pressable>
+          }
         </View>
       </View>
 
@@ -111,7 +119,6 @@ export default function CatalogScreen() {
         contentContainerStyle={styles.list}
         showsVerticalScrollIndicator={false}
       />
-
     </View>
   );
 }
@@ -123,8 +130,8 @@ const styles = StyleSheet.create({
   },
   centered: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: spacing.lg,
     backgroundColor: colors.background,
   },
@@ -136,16 +143,16 @@ const styles = StyleSheet.create({
   errorText: {
     fontSize: typography.sizes.body,
     color: colors.error,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: spacing.md,
   },
   retryButton: {
     width: 160,
   },
   topBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     backgroundColor: colors.surface,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
@@ -158,20 +165,33 @@ const styles = StyleSheet.create({
   },
   businessName: {
     fontSize: typography.sizes.body,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: colors.secondary,
   },
   topBarRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: spacing.sm,
   },
   cartBadge: {
     fontSize: typography.sizes.body,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: colors.primaryDark,
   },
   list: {
     padding: spacing.md,
+  },
+  logoutButton: {
+    //→ esto es nuevo, probando vieja!!
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: borderRadius.md,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+  },
+  logoutText: {
+    color: colors.gray,
+    fontSize: typography.sizes.body,
+    fontWeight: typography.weights.semibold,
   },
 });

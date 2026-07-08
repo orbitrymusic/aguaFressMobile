@@ -46,6 +46,7 @@ AguaFress-Mobile/
     │   ├── _layout.tsx         (sin cambios)
     │   ├── login.tsx           (sin cambios)
     │   ├── catalog.tsx         (sin cambios — vista minorista)
+    │   ├── form.tsx
     │   └── dashboard/
     │       ├── index.tsx       ← lista de clientes del mayorista
     │       └── [clientId].tsx  ← detalle de pedidos de un cliente
@@ -62,6 +63,7 @@ AguaFress-Mobile/
     ├── types/
     │   └── index.ts            (modificar — agregar Vendor, Order)
     ├── hooks/
+    │   ├──  useCart.ts
     │   └── useLoginForm.ts
     └── constants/
         └── theme.ts            (sin cambios)

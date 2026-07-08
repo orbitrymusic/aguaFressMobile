@@ -1,19 +1,26 @@
-import { useState, useEffect } from 'react';
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import {
-  View,
-  Text,
-  FlatList,
   ActivityIndicator,
-  StyleSheet,
   Alert,
-} from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { colors, spacing, typography } from '../../constants/theme';
-import { Client, Order } from '../../types';
-import { getClientsByVendor } from '../../services/auth.service';
-import { getOrdersByVendor } from '../../services/orders.service';
-import { ClientCard } from '../../components/ClientCard';
-import { Button } from '../../components/Button';
+  FlatList,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { Button } from "../../components/Button";
+import { ClientCard } from "../../components/ClientCard";
+import {
+  borderRadius,
+  colors,
+  spacing,
+  typography,
+} from "../../constants/theme";
+import { getClientsByVendor } from "../../services/auth.service";
+import { getOrdersByVendor } from "../../services/orders.service";
+import { Client, Order } from "../../types";
 
 export default function DashboardScreen() {
   const router = useRouter();
@@ -43,10 +50,10 @@ export default function DashboardScreen() {
         // Ordenamos: primero los que tienen pedidos pendientes
         const sorted = [...clientsData].sort((a, b) => {
           const aPending = ordersData.filter(
-            (o) => o.clientId === a.id && o.status === 'pendiente'
+            (o) => o.clientId === a.id && o.status === "pendiente",
           ).length;
           const bPending = ordersData.filter(
-            (o) => o.clientId === b.id && o.status === 'pendiente'
+            (o) => o.clientId === b.id && o.status === "pendiente",
           ).length;
           return bPending - aPending;
         });
@@ -54,7 +61,7 @@ export default function DashboardScreen() {
         setClients(sorted);
         setOrders(ordersData);
       } catch (err) {
-        setError('No se pudo cargar la cartera de clientes.');
+        setError("No se pudo cargar la cartera de clientes.");
       } finally {
         setIsLoading(false);
       }
@@ -66,28 +73,28 @@ export default function DashboardScreen() {
   function handleClientPress(clientId: string) {
     const client = clients.find((c) => c.id === clientId);
     router.push({
-      pathname: '/dashboard/[clientId]',
+      pathname: "/dashboard/[clientId]",
       params: {
         clientId,
-        clientBusinessName: client?.businessName ?? '',
-        vendorId: vendorId ?? '',
+        clientBusinessName: client?.businessName ?? "",
+        vendorId: vendorId ?? "",
       },
     });
   }
 
   function handleLogout() {
-    Alert.alert('Cerrar sesión', '¿Querés salir de tu cuenta?', [
-      { text: 'Cancelar', style: 'cancel' },
+    Alert.alert("Cerrar sesión", "¿Querés salir de tu cuenta?", [
+      { text: "Cancelar", style: "cancel" },
       {
-        text: 'Salir',
-        style: 'destructive',
-        onPress: () => router.replace('/login'),
+        text: "Salir",
+        style: "destructive",
+        onPress: () => router.replace("/login"),
       },
     ]);
   }
 
   // Calcula cuántos pedidos pendientes hay en total
-  const totalPending = orders.filter((o) => o.status === 'pendiente').length;
+  const totalPending = orders.filter((o) => o.status === "pendiente").length;
 
   // ─── Estados de UI ──────────────────────────────────────────────────────────
 
@@ -105,7 +112,10 @@ export default function DashboardScreen() {
       <View style={styles.centered}>
         <Text style={styles.errorText}>{error}</Text>
         <View style={styles.retryButton}>
-          <Button label="Reintentar" onPress={() => router.replace('/dashboard')} />
+          <Button
+            label="Reintentar"
+            onPress={() => router.replace("/dashboard")}
+          />
         </View>
       </View>
     );
@@ -114,58 +124,64 @@ export default function DashboardScreen() {
   // ─── Pantalla principal ─────────────────────────────────────────────────────
 
   return (
-    <View style={styles.container}>
-
-      {/* Barra superior */}
-      <View style={styles.topBar}>
-        <View>
-          <Text style={styles.greeting}>Bienvenido,</Text>
-          <Text style={styles.vendorName}>{vendorName}</Text>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        {/* Barra superior */}
+        <View style={styles.topBar}>
+          <View>
+            <Text style={styles.greeting}>Bienvenido,</Text>
+            <Text style={styles.vendorName}>{vendorName}</Text>
+          </View>
+          {
+            /* <Button label="Salir" onPress={handleLogout} variant="outline" /> */
+            <Pressable onPress={handleLogout} style={styles.logoutButton}>
+              <Text style={styles.logoutText}>Salir</Text>
+            </Pressable>
+          }
         </View>
-        <Button label="Salir" onPress={handleLogout} variant="outline" />
-      </View>
 
-      {/* Resumen de actividad */}
-      <View style={styles.summaryBar}>
-        <Text style={styles.summaryText}>
-          {clients.length} {clients.length === 1 ? 'cliente' : 'clientes'}
-        </Text>
-        {totalPending > 0 && (
-          <View style={styles.pendingPill}>
-            <Text style={styles.pendingPillText}>
-              {totalPending} {totalPending === 1 ? 'pedido pendiente' : 'pedidos pendientes'}
+        {/* Resumen de actividad */}
+        <View style={styles.summaryBar}>
+          <Text style={styles.summaryText}>
+            {clients.length} {clients.length === 1 ? "cliente" : "clientes"}
+          </Text>
+          {totalPending > 0 && (
+            <View style={styles.pendingPill}>
+              <Text style={styles.pendingPillText}>
+                {totalPending}{" "}
+                {totalPending === 1 ? "pedido pendiente" : "pedidos pendientes"}
+              </Text>
+            </View>
+          )}
+          {totalPending === 0 && (
+            <Text style={styles.allClearText}>✓ Todo al día</Text>
+          )}
+        </View>
+
+        {/* Lista de clientes */}
+        {clients.length === 0 ? (
+          <View style={styles.centered}>
+            <Text style={styles.emptyText}>
+              No tenés clientes asignados aún.
             </Text>
           </View>
-        )}
-        {totalPending === 0 && (
-          <Text style={styles.allClearText}>✓ Todo al día</Text>
+        ) : (
+          <FlatList
+            data={clients}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <ClientCard
+                client={item}
+                orders={orders.filter((o) => o.clientId === item.id)}
+                onPress={handleClientPress}
+              />
+            )}
+            contentContainerStyle={styles.list}
+            showsVerticalScrollIndicator={false}
+          />
         )}
       </View>
-
-      {/* Lista de clientes */}
-      {clients.length === 0 ? (
-        <View style={styles.centered}>
-          <Text style={styles.emptyText}>
-            No tenés clientes asignados aún.
-          </Text>
-        </View>
-      ) : (
-        <FlatList
-          data={clients}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <ClientCard
-              client={item}
-              orders={orders.filter((o) => o.clientId === item.id)}
-              onPress={handleClientPress}
-            />
-          )}
-          contentContainerStyle={styles.list}
-          showsVerticalScrollIndicator={false}
-        />
-      )}
-
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -176,8 +192,8 @@ const styles = StyleSheet.create({
   },
   centered: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: spacing.lg,
     backgroundColor: colors.background,
   },
@@ -189,16 +205,16 @@ const styles = StyleSheet.create({
   errorText: {
     fontSize: typography.sizes.body,
     color: colors.error,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: spacing.md,
   },
   retryButton: {
     width: 160,
   },
   topBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     backgroundColor: colors.surface,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
@@ -215,16 +231,16 @@ const styles = StyleSheet.create({
     color: colors.secondary,
   },
   summaryBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
     backgroundColor: colors.primaryDark,
   },
   summaryText: {
     fontSize: typography.sizes.body,
-    color: '#fff',
+    color: "#fff",
     fontWeight: typography.weights.medium,
   },
   pendingPill: {
@@ -235,12 +251,12 @@ const styles = StyleSheet.create({
   },
   pendingPillText: {
     fontSize: typography.sizes.caption,
-    color: '#fff',
+    color: "#fff",
     fontWeight: typography.weights.bold,
   },
   allClearText: {
     fontSize: typography.sizes.caption,
-    color: '#A8F0C6',
+    color: "#A8F0C6",
     fontWeight: typography.weights.semibold,
   },
   list: {
@@ -249,6 +265,23 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: typography.sizes.body,
     color: colors.gray,
-    textAlign: 'center',
+    textAlign: "center",
+  },
+  logoutButton: {
+    // esto es nuevo viejo!!
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: borderRadius.md,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+  },
+  logoutText: {
+    color: colors.gray,
+    fontSize: typography.sizes.body,
+    fontWeight: typography.weights.semibold,
+  },
+  safeArea: {
+    flex: 1,
+    backgroundColor: colors.surface, // mismo color que la topBar para que no se vea el corte
   },
 });
