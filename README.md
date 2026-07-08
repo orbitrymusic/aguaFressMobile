@@ -42,23 +42,23 @@ AguaFress-Mobile/
 │   └── images/
 └── src/
     ├── app/          # Configuración global, navegación principal o rutas (Expo Router)
-    │   ├── index.tsx           (sin cambios)
-    │   ├── _layout.tsx         (sin cambios)
-    │   ├── login.tsx           (sin cambios)
-    │   ├── catalog.tsx         (sin cambios — vista minorista)
+    │   ├── index.tsx
+    │   ├── _layout.tsx
+    │   ├── login.tsx
+    │   ├── catalog.tsx
     │   ├── form.tsx
     │   └── dashboard/
     │       ├── index.tsx       ← lista de clientes del mayorista
     │       └── [clientId].tsx  ← detalle de pedidos de un cliente
     │
     ├── components/   # Componentes visuales reutilizables (Botones, Tarjetas)
-    │   ├── Button.tsx         (sin cambios)
-    │   ├── ProductCard.tsx    (sin cambios)
+    │   ├── Button.tsx
+    │   ├── ProductCard.tsx
     │   └── ClientCard.tsx      ← nuevo, tarjeta del cliente minorista
     │
     ├── services/
     │   ├── auth.service.ts     (modificar — agregar rol mayorista)
-    │   ├── products.service.ts (sin cambios)
+    │   ├── products.service.ts
     │   └── orders.service.ts   ← nuevo, pedidos mock
     ├── types/
     │   └── index.ts            (modificar — agregar Vendor, Order)
@@ -66,7 +66,7 @@ AguaFress-Mobile/
     │   ├──  useCart.ts
     │   └── useLoginForm.ts
     └── constants/
-        └── theme.ts            (sin cambios)
+        └── theme.ts
 
 ```
 
